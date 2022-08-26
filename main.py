@@ -76,7 +76,9 @@ def check_if_contains_in_worksheet(wks, ref_nums):
             for record in ref_nums:
                 if(record[1] == wks_ref_num and record[0] == wks_names[0]):
                     wks.update(f'J{i}', 'Y')
-
+        elif(wks_method == "Cash in person at Jumaah"):
+            if(wks.acell(f'J{i}').value == None):
+               wks.update(f'J{i}', 'N') 
 
     # search_range = f'B2:C{row_length}'
     # wks_names = wks.get(search_range)
