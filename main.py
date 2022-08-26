@@ -2,7 +2,7 @@
 import imaplib
 import email
 import gspread
-
+import time
 ref_num = ""
 
 def verify_amount(email_message):
@@ -69,27 +69,25 @@ def get_ref_list():
 def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
     for i in range(2, row_length):
+        if(i == 29):
+            time.sleep(70)
         wks_method = wks.acell(f'H{i}').value
         if(wks_method == "E-transfer to test@gmail.com"):
+            if(wks.acell(f'J{i}').value == None):
+                        wks.update(f'J{i}', 'N')
             wks_ref_num = wks.acell(f'I{i}').value
-            wks_names = wks.get(f'B{i}:C{i}')
+            wks_names = wks.get(f'K{i}:L{i}')
             for record in ref_nums:
                 if(record[1] == wks_ref_num and record[0] == wks_names[0]):
-                    wks.update(f'J{i}', 'Y')
+                    wks.update(f'J{i}', 'Y')               
         elif(wks_method == "Cash in person at Jumaah"):
             if(wks.acell(f'J{i}').value == None):
                wks.update(f'J{i}', 'N') 
 
-    # search_range = f'B2:C{row_length}'
-    # wks_names = wks.get(search_range)
-
-        
-def update_worksheet():
-    pass
 
 def main():
     #Get all reference numbers corresponding to the amount
-    ref_nums = [[['KINDA', 'CHAKAS'], 'CAGncAVW'], [['NOUR', 'ALMRIRI'], 'CAj6fMcr'], [['TAHSEEN', 'MONEM'], 'CAz28x2Y'], [['MALAIKA', 'KHAN'], 'CAaWwcQN'], [['HAMZA', 'AFZAAL'], 'CA7aMC9u'], [['SHAMIS', 'ALI'], 'CA2hhhsy'], [['FATIMA', 'WARRAICH'], 'CAdJkqYP'], [['REZWAN', 'AHMED'], 'CA3fZWBU']]
+    ref_nums = get_ref_list()
     sa = gspread.service_account()
     sh = sa.open("MSA 2022 Membership Form (Responses)")
 
