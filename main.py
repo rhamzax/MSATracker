@@ -12,7 +12,6 @@ def verify_amount(email_message):
 
             str_msg = message.decode()
             if("$10.00 (CAD)" in str_msg):
-
                 get_reference_num(str_msg)
                 return True
             else:
@@ -27,6 +26,9 @@ def get_reference_num(str_msg):
 
 def get_name(email_message):
     name = email_message["from"].split(" <notify@payments.interac.ca>")[0].upper()
+    name = name.split(" ")
+    if(len(name) == 3):
+        name = [name[0], name[2]]
     return name
 
 def get_ref_list():
@@ -59,20 +61,35 @@ def get_ref_list():
 
         #convert the byte data to message
         email_message = email.message_from_bytes(bytes_data)
-        print("\n===========================================")
         if("deposited" in email_message["subject"]):
             if (verify_amount(email_message)):
                 ref_nums.append([get_name(email_message),ref_num])
     return ref_nums
 
+def check_if_contains_in_worksheet(wks, ref_nums):
+    row_length = wks.row_count
+    search_range = f'I2:I{row_length}'
+    wks_ref_nums = wks.get(search_range)
+
+    search_range = f'B2:C{row_length}'
+    wks_names = wks.get(search_range)
+    
+    for wks_num in wks_ref_nums:
+        for record in ref_nums:
+            if(record[1] == wks_num[0]):
+                print(record)
+        
+def update_worksheet():
+    pass
+
 def main():
     #Get all reference numbers corresponding to the amount
-    ref_nums = get_ref_list()
-    
+    ref_nums = [[['KINDA', 'CHAKAS'], 'CAGncAVW'], [['NOUR', 'ALMRIRI'], 'CAj6fMcr'], [['TAHSEEN', 'MONEM'], 'CAz28x2Y'], [['MALAIKA', 'KHAN'], 'CAaWwcQN'], [['HAMZA', 'AFZAAL'], 'CA7aMC9u'], [['SHAMIS', 'ALI'], 'CA2hhhsy'], [['FATIMA', 'WARRAICH'], 'CAdJkqYP'], [['REZWAN', 'AHMED'], 'CA3fZWBU']]
     sa = gspread.service_account()
     sh = sa.open("MSA 2022 Membership Form (Responses)")
 
     wks = sh.worksheet("Form Responses 1")
+    check_if_contains_in_worksheet(wks,ref_nums)
 
 if __name__ == "__main__":
     main()
