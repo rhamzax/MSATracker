@@ -68,16 +68,19 @@ def get_ref_list():
 
 def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
-    search_range = f'I2:I{row_length}'
-    wks_ref_nums = wks.get(search_range)
+    for i in range(2, row_length):
+        wks_method = wks.acell(f'H{i}').value
+        if(wks_method == "E-transfer to test@gmail.com"):
+            wks_ref_num = wks.acell(f'I{i}').value
+            wks_names = wks.get(f'B{i}:C{i}')
+            for record in ref_nums:
+                if(record[1] == wks_ref_num and record[0] == wks_names[0]):
+                    wks.update(f'J{i}', 'Y')
 
-    search_range = f'B2:C{row_length}'
-    wks_names = wks.get(search_range)
-    
-    for wks_num in wks_ref_nums:
-        for record in ref_nums:
-            if(record[1] == wks_num[0]):
-                print(record)
+
+    # search_range = f'B2:C{row_length}'
+    # wks_names = wks.get(search_range)
+
         
 def update_worksheet():
     pass
