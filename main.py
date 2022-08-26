@@ -11,7 +11,7 @@ def verify_amount(email_message):
             message = part.get_payload(decode=True)
 
             str_msg = message.decode()
-            if("$10.00 (CAD)" in str_msg):
+            if("$5.00 (CAD)" in str_msg):
                 get_reference_num(str_msg)
                 return True
             else:
@@ -74,20 +74,20 @@ def check_if_contains_in_worksheet(wks, ref_nums):
 
         wks_method = wks.acell(f'H{i}').value
         if(wks_method == "E-transfer to calgarymsa@gmail.com"):
-            if(wks.acell(f'J{i}').value == None):
-                        wks.update(f'J{i}', 'N')
+            if(wks.acell(f'K{i}').value == None):
+                        wks.update(f'K{i}', 'N')
             wks_ref_num = wks.acell(f'I{i}').value
-            wks_names = wks.get(f'K{i}:L{i}')
+            wks_names = wks.get(f'L{i}:M{i}')
             for record in ref_nums:
                 if(record[1] == wks_ref_num and record[0] == wks_names[0]):
-                    wks.update(f'J{i}', 'Y') 
+                    wks.update(f'K{i}', 'Y') 
                 elif(record[1].lower() == wks_ref_num.lower() and record[0] == wks_names[0]):
-                    wks.update(f'J{i}', 'Y') 
+                    wks.update(f'K{i}', 'Y') 
                 elif(record[1].lower() == wks_ref_num.lower()):
-                    wks.update(f'J{i}', 'Y, Name does not match') 
-        elif(wks_method == "Cash in person at Jumaah"):
-            if(wks.acell(f'J{i}').value == None):
-               wks.update(f'J{i}', 'N') 
+                    wks.update(f'K{i}', 'Y, Name does not match') 
+        elif(wks_method == "Cash/Card in person at Jumaah"):
+            if(wks.acell(f'K{i}').value == None):
+               wks.update(f'K{i}', 'N') 
         elif(wks_method == None):
             break
 
