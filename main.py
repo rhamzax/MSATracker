@@ -32,7 +32,6 @@ def get_name(email_message):
     return name
 
 def get_ref_list():
-
     #credentials
     username ="calgarymsa@gmail.com"
 
@@ -69,25 +68,33 @@ def get_ref_list():
 def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
     for i in range(2, row_length):
+        #Reset request per minute
         if(i == 29):
             time.sleep(70)
+
         wks_method = wks.acell(f'H{i}').value
-        if(wks_method == "E-transfer to test@gmail.com"):
+        if(wks_method == "E-transfer to calgarymsa@gmail.com"):
             if(wks.acell(f'J{i}').value == None):
                         wks.update(f'J{i}', 'N')
             wks_ref_num = wks.acell(f'I{i}').value
             wks_names = wks.get(f'K{i}:L{i}')
             for record in ref_nums:
                 if(record[1] == wks_ref_num and record[0] == wks_names[0]):
-                    wks.update(f'J{i}', 'Y')               
+                    wks.update(f'J{i}', 'Y') 
+                elif(record[1].lower() == wks_ref_num.lower() and record[0] == wks_names[0]):
+                    wks.update(f'J{i}', 'Y') 
+                elif(record[1].lower() == wks_ref_num.lower()):
+                    wks.update(f'J{i}', 'Y, Name does not match') 
         elif(wks_method == "Cash in person at Jumaah"):
             if(wks.acell(f'J{i}').value == None):
                wks.update(f'J{i}', 'N') 
-
+        elif(wks_method == None):
+            break
 
 def main():
     #Get all reference numbers corresponding to the amount
     ref_nums = get_ref_list()
+
     sa = gspread.service_account()
     sh = sa.open("MSA 2022 Membership Form (Responses)")
 
