@@ -5,6 +5,8 @@ import gspread
 import time
 ref_num = ""
 
+
+#Change names to have not spaces and also check names to match at least two when there are three names
 def verify_amount(email_message):
     for part in email_message.walk():
         if part.get_content_type()=="text/plain" or part.get_content_type()=="text/html":
@@ -27,8 +29,8 @@ def get_reference_num(str_msg):
 def get_name(email_message):
     name = email_message["from"].split(" <notify@payments.interac.ca>")[0].upper()
     name = name.split(" ")
-    if(len(name) == 3):
-        name = [name[0], name[2]]
+    # if(len(name) == 3):
+    #     name = [name[0], name[2]]
     return name
 
 def get_ref_list():
@@ -64,11 +66,34 @@ def get_ref_list():
             if (verify_amount(email_message)):
                 ref_nums.append([get_name(email_message),ref_num])
     return ref_nums
+
 def upper_case_names(names_list):
     upper_names_list = []
     for name in names_list[0]:
         upper_names_list.append(name.upper())
     return upper_names_list
+
+def check_if_names_match(gmail_name, sheets_name):
+    #Removes whitespace
+    modified_sheets_name = []
+    for sheet_name in sheets_name:
+        if " " in sheet_name:
+            list_sheet_name = sheet_name.split(" ")
+            modified_sheets_name.append(list_sheet_name[0])
+            modified_sheets_name.append(list_sheet_name[1])
+        else:
+            modified_sheets_name.append(sheet_name)
+            
+    name_amount_matchs = 0
+    for g_name in gmail_name:
+        for sheet_name in modified_sheets_name:
+            if sheet_name == g_name:
+                name_amount_matchs += 1
+    if(name_amount_matchs >= 2):
+        return True
+    else:
+        return False
+
 def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
     for i in range(2, row_length):
@@ -84,11 +109,7 @@ def check_if_contains_in_worksheet(wks, ref_nums):
             wks_names = upper_case_names(wks.get(f'B{i}:C{i}'))
 
             for record in ref_nums:
-                print(wks_names)
-                print(record)
-                if(record[1] == wks_ref_num and record[0] == wks_names):
-                    wks.update(f'K{i}', 'Y') 
-                elif(record[1].lower() == wks_ref_num.lower() and record[0] == wks_names):
+                if(record[1].lower() == wks_ref_num.lower() and check_if_names_match(record[0], wks_names)):
                     wks.update(f'K{i}', 'Y') 
                 elif(record[1].lower() == wks_ref_num.lower()):
                     wks.update(f'K{i}', 'Y, Name does not match') 
