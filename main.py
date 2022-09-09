@@ -64,7 +64,11 @@ def get_ref_list():
             if (verify_amount(email_message)):
                 ref_nums.append([get_name(email_message),ref_num])
     return ref_nums
-
+def upper_case_names(names_list):
+    upper_names_list = []
+    for name in names_list[0]:
+        upper_names_list.append(name.upper())
+    return upper_names_list
 def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
     for i in range(2, row_length):
@@ -77,11 +81,14 @@ def check_if_contains_in_worksheet(wks, ref_nums):
             if(wks.acell(f'K{i}').value == None):
                         wks.update(f'K{i}', 'N')
             wks_ref_num = wks.acell(f'I{i}').value
-            wks_names = wks.get(f'L{i}:M{i}')
+            wks_names = upper_case_names(wks.get(f'B{i}:C{i}'))
+
             for record in ref_nums:
-                if(record[1] == wks_ref_num and record[0] == wks_names[0]):
+                print(wks_names)
+                print(record)
+                if(record[1] == wks_ref_num and record[0] == wks_names):
                     wks.update(f'K{i}', 'Y') 
-                elif(record[1].lower() == wks_ref_num.lower() and record[0] == wks_names[0]):
+                elif(record[1].lower() == wks_ref_num.lower() and record[0] == wks_names):
                     wks.update(f'K{i}', 'Y') 
                 elif(record[1].lower() == wks_ref_num.lower()):
                     wks.update(f'K{i}', 'Y, Name does not match') 
