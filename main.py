@@ -113,7 +113,8 @@ def check_if_contains_in_worksheet(wks, ref_nums):
                 if(record[1].lower() == wks_ref_num.lower() and check_if_names_match(record[0], wks_names)):
                     wks.update(f'K{i}', 'Y') 
                 elif(record[1].lower() == wks_ref_num.lower()):
-                    wks.update(f'K{i}', 'Y, Name does not match') 
+                    if(wks.acell(f'K{i}').value != "Y"):
+                        wks.update(f'K{i}', 'Y, Name does not match') 
         elif(wks_method == "Cash/Card in person at Jumaah"):
             if(wks.acell(f'K{i}').value == None):
                wks.update(f'K{i}', 'N') 
@@ -131,7 +132,8 @@ def main():
     check_if_contains_in_worksheet(wks,ref_nums)
 
 if __name__ == "__main__":
-    while True:
-        main()
-        time.sleep(86400)
+    main()
+    # while True:
+    #     main()
+    #     time.sleep(86400)
     
