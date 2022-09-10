@@ -3,6 +3,7 @@ import imaplib
 import email
 import gspread
 import time
+import schedule
 ref_num = ""
 
 
@@ -83,7 +84,7 @@ def check_if_names_match(gmail_name, sheets_name):
             modified_sheets_name.append(list_sheet_name[1])
         else:
             modified_sheets_name.append(sheet_name)
-            
+
     name_amount_matchs = 0
     for g_name in gmail_name:
         for sheet_name in modified_sheets_name:
@@ -130,4 +131,7 @@ def main():
     check_if_contains_in_worksheet(wks,ref_nums)
 
 if __name__ == "__main__":
-    main()
+    while True:
+        main()
+        time.sleep(86400)
+    
