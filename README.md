@@ -10,5 +10,10 @@ It then goes through a Google spreadsheet of names with confirmation codes input
 
 ---
 
+## Demo
+
+![](https://github.com/MSATracker/MSA_Tracker_Demo.gif)
+
+---
 
 If this repo helped you, don't forget to ⭐ it!
