@@ -12,7 +12,7 @@ It then goes through a Google spreadsheet of names with confirmation codes input
 
 ## Demo
 
-![](https://github.com/rhamzax/MSATracker/MSA_Tracker_Demo.gif)
+![](https://github.com/rhamzax/MSATracker/blob/main/MSA_Tracker_Demo.gif)
 
 ---
 
