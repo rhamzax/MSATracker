@@ -99,22 +99,27 @@ def check_if_contains_in_worksheet(wks, ref_nums):
     row_length = wks.row_count
     for i in range(2, row_length):
         #Reset request per minute
-        if(i == 29):
+        if(i % 20 == 0):
             time.sleep(70)
 
         wks_method = wks.acell(f'H{i}').value
+        #Passes over row if already checked
+        if(wks.acell(f'K{i}').value == 'Y'):
+            continue
         if(wks_method == "E-transfer to calgarymsa@gmail.com"):
             if(wks.acell(f'K{i}').value == None):
-                        wks.update(f'K{i}', 'N')
+                wks.update(f'K{i}', 'N')
             wks_ref_num = wks.acell(f'I{i}').value
             wks_names = upper_case_names(wks.get(f'B{i}:C{i}'))
 
             for record in ref_nums:
                 if(record[1].lower() == wks_ref_num.lower() and check_if_names_match(record[0], wks_names)):
                     wks.update(f'K{i}', 'Y') 
+                    print("Update")
                 elif(record[1].lower() == wks_ref_num.lower()):
-                    if(wks.acell(f'K{i}').value != "Y"):
+                    if(wks.acell(f'K{i}').value != "Y" ):
                         wks.update(f'K{i}', 'Y, Name does not match') 
+                        print("Update")
         elif(wks_method == "Cash/Card in person at Jumaah"):
             if(wks.acell(f'K{i}').value == None):
                wks.update(f'K{i}', 'N') 
@@ -122,6 +127,7 @@ def check_if_contains_in_worksheet(wks, ref_nums):
             break
 
 def main():
+    print("Running")
     #Get all reference numbers corresponding to the amount
     ref_nums = get_ref_list()
 
@@ -133,7 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # while True:
-    #     main()
-    #     time.sleep(86400)
     
