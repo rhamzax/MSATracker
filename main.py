@@ -39,7 +39,7 @@ def get_ref_list():
     username ="calgarymsa@gmail.com"
 
     #generated app password
-    app_password = "aiqyflzydlpznhvn"
+    app_password = ""
 
     # https://www.systoolsgroup.com/imap/
     gmail_host= 'imap.gmail.com'
